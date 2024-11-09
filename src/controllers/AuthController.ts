@@ -12,3 +12,13 @@ export const hello = async (_req: Request, res: Response, _next: NextFunction) =
         throw error;
     }
 }
+
+export const signUp = async (req: Request, res: Response, _next: NextFunction) => {
+    try {
+        const result = await authService.signUp(req.body);
+        res.status(201).json(result);
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

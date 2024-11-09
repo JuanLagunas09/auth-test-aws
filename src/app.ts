@@ -5,6 +5,7 @@ import { config } from "./config/config";
 import AuthRouter from "./routes/AuthRouter";
 
 const app = express();
+app.use(express.json());
 app.use(cors());
 
 // PREFIX

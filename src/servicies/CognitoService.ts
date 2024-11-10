@@ -4,12 +4,14 @@ import {
   ConfirmForgotPasswordCommand,
   ConfirmSignUpCommand,
   ForgotPasswordCommand,
+  GetUserCommand,
   GlobalSignOutCommand,
   InitiateAuthCommand,
   SignUpCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { ISignUp } from "../interfaces/Iuser";
 import { config } from "../config/config";
+import boom from "@hapi/boom";
 
 export class CognitoService {
   private cognito: CognitoIdentityProviderClient;
@@ -74,21 +76,44 @@ export class CognitoService {
     }
   }
 
-  async logOut(token: any): Promise<any> {
-    const command = new GlobalSignOutCommand({
-      AccessToken: token,
-    });
+  async getProfile(token: any): Promise<any> {
+    try {
+      const command = new GetUserCommand({
+        AccessToken: token,
+      });
 
-    return await this.cognito.send(command);
+      return await this.cognito.send(command);
+    } catch (error) {
+      console.error("Error in getProfile Cognito", error);
+      throw boom.unauthorized("Unauthorized");
+    }
+  }
+
+  async logOut(token: any): Promise<any> {
+    try {
+      const command = new GlobalSignOutCommand({
+        AccessToken: token,
+      });
+
+      return await this.cognito.send(command);
+    } catch (error) {
+      console.error("Error in logOut Cognito", error);
+      throw error;
+    }
   }
 
   async forgotPassword(username: string): Promise<any> {
-    const command = new ForgotPasswordCommand({
-      ClientId: config.COGNITO_CLIENT_ID,
-      Username: username,
-    });
+    try {
+      const command = new ForgotPasswordCommand({
+        ClientId: config.COGNITO_CLIENT_ID,
+        Username: username,
+      });
 
-    return await this.cognito.send(command);
+      return await this.cognito.send(command);
+    } catch (error) {
+      console.error("Error in forgotPassword Cognito", error);
+      throw error;
+    }
   }
 
   async confirmForgotPassword(
@@ -96,13 +121,18 @@ export class CognitoService {
     code: string,
     newPassword: string
   ): Promise<any> {
-    const command = new ConfirmForgotPasswordCommand({
-      ClientId: config.COGNITO_CLIENT_ID,
-      Username: username,
-      ConfirmationCode: code,
-      Password: newPassword,
-    });
+    try {
+      const command = new ConfirmForgotPasswordCommand({
+        ClientId: config.COGNITO_CLIENT_ID,
+        Username: username,
+        ConfirmationCode: code,
+        Password: newPassword,
+      });
 
-    return await this.cognito.send(command);
+      return await this.cognito.send(command);
+    } catch (error) {
+      console.error("Error in confirmForgotPassword Cognito", error);
+      throw error;
+    }
   }
 }

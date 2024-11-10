@@ -1,4 +1,6 @@
 import { CognitoService } from "./CognitoService";
+import jwt from "jsonwebtoken";
+import { config } from "../config/config";
 
 export class AuthService {
   private cognitoService: CognitoService;
@@ -50,10 +52,46 @@ export class AuthService {
         username,
         password
       );
-      return resultCognito;
+
+      if (
+        resultCognito.$metadata.httpStatusCode !== 200 ||
+        !resultCognito.AuthenticationResult ||
+        !resultCognito.AuthenticationResult.AccessToken
+      ) {
+        throw new Error("Error al iniciar sesion en cognito");
+      }
+
+      const profileCognito = await this.cognitoService.getProfile(
+        resultCognito.AuthenticationResult.AccessToken
+      );
+      const sub = profileCognito.UserAttributes.find(
+        (attr: any) => attr.Name === "sub"
+      )?.Value;
+
+      if (!sub) {
+        throw new Error("Error al obtener el perfil del usuario");
+      }
+
+      const createToken = jwt.sign(
+        {
+          token: resultCognito.AuthenticationResult.AccessToken,
+          sub,
+        },
+        config.JWT_SECRET!
+      );
+
+      return createToken;
     } catch (error) {
       console.error("Error in signIn in AuthService", error);
       throw error;
+    }
+  }
+
+  async logOut(accessToken: string): Promise<any> {
+    try {
+      return await this.cognitoService.logOut(accessToken);
+    } catch (error) {
+      throw new Error("Error on logout");
     }
   }
 

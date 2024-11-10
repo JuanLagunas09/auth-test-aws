@@ -53,10 +53,28 @@ export const signIn = async (
 ) => {
   try {
     const { username, password } = req.body;
-    const result = await authService.signIn(username, password);
-    res.status(200).json(result);
+    const token = await authService.signIn(username, password);
+    res.status(200).json({ token });
   } catch (error) {
     console.log("error controller auth signIn", error);
+    next(error);
+  }
+};
+
+export const logOut = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user: any = req.user;
+    if(!user) {
+      throw new Error("User not found");
+    }
+    await authService.logOut(user.token);
+    res.status(200).json({ message: "LogOut success" });
+  } catch (error) {
+    console.log("error controller auth logOut", error);
     next(error);
   }
 };

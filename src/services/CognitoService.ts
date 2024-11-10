@@ -40,7 +40,7 @@ export class CognitoService {
       return await this.cognito.send(command);
     } catch (error) {
       console.error("Error in signUp Cognito", error);
-      throw error;
+      throw boom.badRequest("Error registering user in Cognito");
     }
   }
 
@@ -54,7 +54,7 @@ export class CognitoService {
       return await this.cognito.send(command);
     } catch (error) {
       console.error("Error in VerifyEmail Cognito", error);
-      throw error;
+      throw boom.badRequest("Error verifying email");
     }
   }
 
@@ -72,7 +72,7 @@ export class CognitoService {
       return result;
     } catch (error) {
       console.error("Error in signIn Cognito", error);
-      throw error;
+      throw boom.unauthorized("Unauthorized");
     }
   }
 
@@ -98,7 +98,7 @@ export class CognitoService {
       return await this.cognito.send(command);
     } catch (error) {
       console.error("Error in logOut Cognito", error);
-      throw error;
+      throw boom.badRequest("Error out session");
     }
   }
 
@@ -112,7 +112,7 @@ export class CognitoService {
       return await this.cognito.send(command);
     } catch (error) {
       console.error("Error in forgotPassword Cognito", error);
-      throw error;
+      throw boom.badRequest("Error forgot password");
     }
   }
 
@@ -132,7 +132,7 @@ export class CognitoService {
       return await this.cognito.send(command);
     } catch (error) {
       console.error("Error in confirmForgotPassword Cognito", error);
-      throw error;
+      throw boom.badRequest("Error confirm forgot password");
     }
   }
 }

@@ -6,10 +6,12 @@ const Router = express.Router();
 
 Router.get(
   "/hello",
-  passport.authenticate("jwt", { session: false }),
   AuthController.hello
 );
-Router.post("/signup", AuthController.signUp);
+Router.post("/signup", 
+  // other strategyJWT
+  //passport.authenticate("jwt-user-msv", { session: false }),
+  AuthController.signUp);
 Router.post("/verify", AuthController.VerifyEmail);
 Router.post("/signin", AuthController.signIn);
 Router.post("/forgotpassword", AuthController.forgotPassword);

@@ -3,10 +3,12 @@ import express from "express";
 import cors from "cors";
 import { config } from "./config/config";
 import AuthRouter from "./routes/AuthRouter";
-import { boomHandler } from "./middlewares/boomHandler";
+import { boomHandler, errorHandler } from "./middlewares/boomHandler";
 
 // Stragy Passport JWT
+import("./utilis/jwtStrategyMsvUser");
 import("./utilis/jwtStrategy");
+
 
 const app = express();
 app.use(express.json());
@@ -18,10 +20,11 @@ const router = express.Router();
 app.use(`/${config.STAGE_API}/auth`, router);
 
 // ROUTES
-router.use("/", AuthRouter)
+router.use("/", AuthRouter);
 
 // Error handler
 app.use(boomHandler);
+app.use(errorHandler);
 
 // Init server
 app.listen(config.PORT, () => {

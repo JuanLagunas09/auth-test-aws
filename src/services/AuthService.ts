@@ -1,6 +1,7 @@
 import { CognitoService } from "./CognitoService";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config";
+import boom from "@hapi/boom";
 
 export class AuthService {
   private cognitoService: CognitoService;
@@ -14,7 +15,7 @@ export class AuthService {
       return "Hello World With Actions!";
     } catch (error) {
       console.log(error);
-      throw error;
+      throw boom.badImplementation("Error in hello");
     }
   }
 
@@ -29,7 +30,7 @@ export class AuthService {
       }
     } catch (error) {
       console.error("Error in signUp", error);
-      throw error;
+      throw boom.badImplementation("Error in signUp");
     }
   }
 
@@ -42,7 +43,7 @@ export class AuthService {
       return resultCognito;
     } catch (error) {
       console.error("Error in VerifyEmail in AutthService", error);
-      throw error;
+      throw boom.badImplementation("Error in VerifyEmail");
     }
   }
 
@@ -58,7 +59,7 @@ export class AuthService {
         !resultCognito.AuthenticationResult ||
         !resultCognito.AuthenticationResult.AccessToken
       ) {
-        throw new Error("Error al iniciar sesion en cognito");
+        throw boom.unauthorized("Error in cognito signIn");
       }
 
       const profileCognito = await this.cognitoService.getProfile(
@@ -69,7 +70,7 @@ export class AuthService {
       )?.Value;
 
       if (!sub) {
-        throw new Error("Error al obtener el perfil del usuario");
+        throw boom.notFound("User not found in cognito");
       }
 
       const createToken = jwt.sign(
@@ -83,7 +84,7 @@ export class AuthService {
       return createToken;
     } catch (error) {
       console.error("Error in signIn in AuthService", error);
-      throw error;
+      throw boom.badImplementation("Error in signIn");
     }
   }
 
@@ -91,7 +92,7 @@ export class AuthService {
     try {
       return await this.cognitoService.logOut(accessToken);
     } catch (error) {
-      throw new Error("Error on logout");
+      throw boom.badImplementation("Error in logOut");
     }
   }
 
@@ -99,7 +100,7 @@ export class AuthService {
     try {
       return await this.cognitoService.forgotPassword(username);
     } catch (error) {
-      throw new Error("Error on forgot password");
+      throw boom.badImplementation("Error in forgot password");
     }
   }
 
@@ -115,7 +116,7 @@ export class AuthService {
         password
       );
     } catch (error) {
-      throw new Error("Error on confirm forgot password");
+      throw boom.badImplementation("Error in confirm forgot password");
     }
   }
 }

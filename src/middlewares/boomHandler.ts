@@ -17,3 +17,17 @@ export const boomHandler = (
   }
   next(error);
 };
+
+export const errorHandler = (
+  error: any,
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) => {
+  console.log("error generic auth =>", error);
+  res.status(500).json({
+    statusCode: 500,
+    message: "Internal Server Error",
+    error: "Internal Server Error",
+  });
+};

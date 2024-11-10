@@ -6,26 +6,21 @@ import {
 } from "passport-jwt";
 import { config } from "../config/config";
 import boom from "@hapi/boom";
-import { CognitoService } from "../services/CognitoService";
-
-
-const cognitoService = new CognitoService();
 
 const options: StrategyOptionsWithoutRequest = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: config.JWT_SECRET!,
+  secretOrKey: config.JWT_SECRET_MSV_USER!,
 };
 
 const jwtStrategy = new Strategy(options, async (payload, done) => {
   try {
-    const tokenCognito = await cognitoService.getProfile(payload.token);
-    if (payload.token && tokenCognito) {
+    if (payload.token_msv_user === config.JWT_SECRET_MSV_USER) {
       return done(null, payload);
     }
-    return done(boom.unauthorized("Unauthorized"), false);
+    return done(boom.unauthorized("Unauthorized user register"), false);
   } catch (error) {
     return done(error, false);
   }
 });
 
-passport.use("jwt", jwtStrategy);
+passport.use("jwt-user-msv", jwtStrategy);

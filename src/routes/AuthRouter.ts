@@ -4,16 +4,20 @@ import passport from "passport";
 
 const Router = express.Router();
 
-Router.get(
-  "/hello",
-  AuthController.hello
-);
-Router.post("/signup", 
+Router.get("/hello", AuthController.hello);
+Router.post(
+  "/signup",
   // other strategyJWT
-  //passport.authenticate("jwt-user-msv", { session: false }),
-  AuthController.signUp);
+  passport.authenticate("jwt-user-msv", { session: false }),
+  AuthController.signUp
+);
 Router.post("/verify", AuthController.VerifyEmail);
 Router.post("/signin", AuthController.signIn);
+Router.post(
+  "/profile-cognito",
+  passport.authenticate("jwt", { session: false }),
+  AuthController.profile
+);
 Router.post("/forgotpassword", AuthController.forgotPassword);
 Router.post("/confirmforgotpassword", AuthController.confirmForgotPassword);
 Router.post(

@@ -2,6 +2,7 @@ import { CognitoService } from "./CognitoService";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config";
 import boom from "@hapi/boom";
+import { ISignUp } from "../interfaces/Iuser";
 
 export class AuthService {
   private cognitoService: CognitoService;
@@ -12,14 +13,14 @@ export class AuthService {
 
   async hello(): Promise<string> {
     try {
-      return "Hello World With Actions!";
+      return "Auth Service Say Hello World!";
     } catch (error) {
       console.log(error);
       throw boom.badImplementation("Error in hello");
     }
   }
 
-  async signUp(user: any): Promise<any> {
+  async signUp(user: ISignUp): Promise<any> {
     try {
       const resultCognito = await this.cognitoService.signUp(user);
 
@@ -85,6 +86,22 @@ export class AuthService {
     } catch (error) {
       console.error("Error in signIn in AuthService", error);
       throw boom.badImplementation("Error in signIn");
+    }
+  }
+
+  async profile(accessToken: string): Promise<any> {
+    try {
+      const profileCognito = await this.cognitoService.getProfile(accessToken);
+      if (
+        profileCognito.$metadata.httpStatusCode === 200 &&
+        profileCognito.UserAttributes
+      ) {
+        return profileCognito.UserAttributes;
+      } else {
+        throw boom.notFound("Profile not found");
+      }
+    } catch (error) {
+      throw boom.badImplementation("Error in profile");
     }
   }
 

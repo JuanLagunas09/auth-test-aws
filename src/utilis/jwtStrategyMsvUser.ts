@@ -9,12 +9,12 @@ import boom from "@hapi/boom";
 
 const options: StrategyOptionsWithoutRequest = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: config.JWT_SECRET_MSV_USER!,
+  secretOrKey: config.JWT_SECRET_CONNECT!,
 };
 
 const jwtStrategy = new Strategy(options, async (payload, done) => {
   try {
-    if (payload.token_msv_user === config.JWT_SECRET_MSV_USER) {
+    if (payload.token_connect === config.TOKEN_CONNECT) {
       return done(null, payload);
     }
     return done(boom.unauthorized("Unauthorized user register"), false);

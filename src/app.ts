@@ -27,8 +27,18 @@ app.use(boomHandler);
 app.use(errorHandler);
 
 // Init server
-app.listen(config.PORT, () => {
+/* app.listen(config.PORT, () => {
   console.log(`Server is running on port ${config.PORT}`);
-});
+}); */
+
+const initApp = async () => {
+  try {
+    console.log("Initializing app auth");
+  } catch (error) {
+    console.log("Error initializing app", error);
+  }
+}
+
+initApp();
 
 export default app;

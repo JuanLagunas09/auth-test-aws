@@ -90,7 +90,7 @@ export const profile = async (
       throw new Error("User not found");
     }
     const data = await authService.profile(user.token);
-    res.status(200).json({data});
+    res.status(200).json(data);
   } catch (error) {
     console.log("error controller auth logOut", error);
     next(error);

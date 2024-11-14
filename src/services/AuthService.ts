@@ -96,7 +96,7 @@ export class AuthService {
         profileCognito.$metadata.httpStatusCode === 200 &&
         profileCognito.UserAttributes
       ) {
-        return profileCognito.UserAttributes;
+        return profileCognito;
       } else {
         throw boom.notFound("Profile not found");
       }

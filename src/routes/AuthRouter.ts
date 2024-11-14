@@ -13,7 +13,7 @@ Router.post(
 );
 Router.post("/verify", AuthController.VerifyEmail);
 Router.post("/signin", AuthController.signIn);
-Router.post(
+Router.get(
   "/profile-cognito",
   passport.authenticate("jwt", { session: false }),
   AuthController.profile

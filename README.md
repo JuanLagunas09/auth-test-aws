@@ -8,6 +8,8 @@ npm run dev
 # Para mayor informacion del proyecto visitar
 https://www.youtube.com/watch?v=UG3a5i5hXaU&list=PLVwo5HckIyN877oQEWzYGVQuwgZsTaRSC
 
+https://github.com/JuanLagunas09/auth-test-aws 
+
 https://github.com/JuanLagunas09/user-test-aws
 
 # Cognito docs para JS

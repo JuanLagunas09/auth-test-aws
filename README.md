@@ -1,6 +1,6 @@
 # Ejecutar
-npm i 
-npm run dev
+- npm i 
+- npm run dev
 
 # Es necesario configurar el ID del cliente de cognito y el archivo yml para las github actions
 # Configurar en github las variables de entorno necesarias para github actions
